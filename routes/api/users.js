@@ -25,12 +25,12 @@ router.get("/test", (req, res) => {
 //@desc  Register users route
 //@access Public
 router.post("/register", (req, res) => {
-  // const { errors, isValid } = validateRegisterInput(req.body);
+  const { errors, isValid } = validateRegisterInput(req.body);
 
-  // //Check Validation
-  // if (!isValid) {
-  //   return res.status(400).json(errors);
-  // }
+  //Check Validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
   User.findOne({ email: req.body.email }).then((user) => {
     if (user) return res.status(400).json({ email: "Email already exists" });
@@ -38,7 +38,7 @@ router.post("/register", (req, res) => {
       const avatar = gravatar.url(req.body.email, {
         s: "200", //size
         r: "pg", // rating
-        d: "mm", // default
+        d: "mm", // defaults
       });
 
       const newUser = new User({
@@ -54,11 +54,6 @@ router.post("/register", (req, res) => {
           newUser.password = hash;
           newUser
             .save()
-            // .then((user) =>
-            //   res.json(
-            //     Object.assign({}, { msg: "registration Successful!" }, user)
-            //   )
-            // )
             .then((user) => {
               res.json(user);
             })
