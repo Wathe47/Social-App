@@ -39,7 +39,6 @@ const postSchema = new Schema({
       },
       avatar: {
         type: String,
-        required: true,
       },
       date: {
         type: Date,
