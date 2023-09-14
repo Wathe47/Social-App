@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./store";
 
 import "./App.css";
 import Footer from "./components/layout/Footer";
@@ -10,22 +12,24 @@ import Register from "./components/auth/register";
 class App extends Component {
   render() {
     return (
-      <Router>
-        <div className="App">
-          <Navbar />
-          <Routes>
-            <Route exact path="/" Component={Landing} />
-          </Routes>
-          <div className="container">
+      <Provider store={store}>
+        <Router>
+          <div className="App">
+            <Navbar />
             <Routes>
-              <Route exact path="/register" Component={Register} />
-              <Route exact path="/login" Component={Login} />
+              <Route exact path="/" Component={Landing} />
             </Routes>
-          </div>
+            <div className="container">
+              <Routes>
+                <Route exact path="/register" Component={Register} />
+                <Route exact path="/login" Component={Login} />
+              </Routes>
+            </div>
 
-          <Footer />
-        </div>
-      </Router>
+            <Footer />
+          </div>
+        </Router>
+      </Provider>
     );
   }
 }
