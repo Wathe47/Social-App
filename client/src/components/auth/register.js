@@ -1,6 +1,9 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Proptypes from "prop-types";
 import classnames from "classnames";
+import { registerUser } from "../../redux/actions/authActions";
+import { connect } from "react-redux";
+
 class Register extends Component {
   constructor() {
     super();
@@ -20,6 +23,12 @@ class Register extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   onSubmit(e) {
     e.preventDefault();
 
@@ -30,18 +39,17 @@ class Register extends Component {
       password2: this.state.password2,
     };
 
-    axios
-      .post("/api/users/register", newUser)
-      .then((res) => console.log(res.data))
-      .catch((err) => this.setState({ errors: err.response.data }));
+    this.props.registerUser(newUser,this.props.history);
   }
 
   render() {
     const { errors } = this.state;
+    const { user } = this.props.auth;
 
     return (
       <div>
         <div className="register">
+          {user ? user.name : null}
           <div className="container">
             <div className="row">
               <div className="col-md-8 m-auto">
@@ -79,7 +87,7 @@ class Register extends Component {
                     {errors.email && (
                       <div className="invalid-feedback">{errors.email}</div>
                     )}
-                    <small classNameName="form-text text-muted">
+                    <small className="form-text text-muted">
                       This site uses Gravatar so if you want a profile image,
                       use a Gravatar email
                     </small>
@@ -128,4 +136,15 @@ class Register extends Component {
   }
 }
 
-export default Register;
+Register.propTypes = {
+  registerUser: Proptypes.func.isRequired,
+  auth: Proptypes.object.isRequired,
+  errors: Proptypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  errors: state.errors,
+});
+
+export default connect(mapStateToProps, { registerUser }) (Register);

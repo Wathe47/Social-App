@@ -8,35 +8,38 @@ module.exports = function validateRegisterInput(data) {
     errors.name = "Name must not be empty";
   } else {
     data.name = data.name;
+    if (!Validator.isLength(data.name, { min: 2, max: 30 })) {
+      errors.name = "Name must be between 2 and 30 characters";
+    }
   }
 
-  if (!Validator.isLength(data.name, { min: 2, max: 30 })) {
-    errors.name = "Name must be between 2 and 30 characters";
-  }
+
 
   if (isEmpty(data.email)) {
     errors.email = "email must not be empty";
   } else {
     data.email = data.email;
+    if (!Validator.isEmail(data.email)) {
+      errors.email = "Email is not Valid";
+    }
   }
 
-  if (!Validator.isEmail(data.email)) {
-    errors.name = "Email is not Valid";
-  }
+
 
   if (isEmpty(data.password)) {
     errors.password = "password must not be empty";
   } else {
     data.password = data.password;
+    if (!Validator.isLength(data.password, { min: 6, max: 20 })) {
+      errors.password = "password must be between 6 and 20 characters";
+    }
+  
+    if (!Validator.equals(data.password, data.password2)) {
+      errors.password2 = "passwords shoud match";
+    }
   }
 
-  if (!Validator.isLength(data.password, { min: 6, max: 10 })) {
-    errors.password = "password must be between 6 and 10 characters";
-  }
 
-  if (!Validator.equals(data.password, data.password2)) {
-    errors.password2 = "passwords shoud match";
-  }
 
   return {
     errors,
